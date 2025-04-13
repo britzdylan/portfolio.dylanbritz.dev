@@ -1,6 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
-@import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap');
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @theme {
   --font-sans: "Inter", "system-ui", "sans-serif";
   --text-xs: 0.875rem;

@@ -3,23 +3,23 @@ import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import BlogCard from '../../components/ui/blog-card.vue';
 import BlogHeader from '../../components/ui/blog-header.vue';
-import { faker } from '@faker-js/faker';
+// import { faker } from '@faker-js/faker';
 const posts = await getCollection('blog');
-const randomPost = () => ({
-  data: {
-    title: faker.lorem.sentence(8),
-    author: faker.internet.displayName(),
-    date: faker.date.past({
-      years: 1,
-      refDate: new Date(),
-    }),
-  },
-  id: faker.string.uuid(),
-});
-const randomPosts = Array.from({ length: 10 }, () => randomPost());
-randomPosts.forEach((post) => {
-  posts.push(post);
-});
+// const randomPost = () => ({
+//   data: {
+//     title: faker.lorem.sentence(8),
+//     author: faker.internet.displayName(),
+//     date: faker.date.past({
+//       years: 1,
+//       refDate: new Date(),
+//     }),
+//   },
+//   id: faker.string.uuid(),
+// });
+// const randomPosts = Array.from({ length: 10 }, () => randomPost());
+// randomPosts.forEach((post) => {
+//   posts.push(post);
+// });
 ---
 
 <Layout>
