@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "system-ui", "sans-serif";
+  --text-xs: 0.875rem;
+  --text-sm: 1rem;
+  --text-bas': 1.25rem;
+  --text-lg: 1.5rem;
+  --text-xl: 2rem;
+  --text-2xl: 2.5rem;
+  --text-3xl: 3.5rem;
+  --text-4xl: 4.5rem;
+  --spacing: 8px;
+}
