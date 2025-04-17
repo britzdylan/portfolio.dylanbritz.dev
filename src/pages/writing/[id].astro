@@ -40,7 +40,31 @@ const { Content } = await render(post);
       image=''
     />
     <section
-      class='bg-neutral-50 w-full z-10 pb-8 px-2 md:px-6 lg:py-20 rounded-t-4xl shadow-lg relative'>
+      class='bg-neutral-50 w-full z-10 pb-8 px-2 md:px-6 lg:py-20 rounded-t-4xl relative'>
+      <nav class='max-w-4xl mx-auto pb-5'>
+        <ul
+          class='flex flex-wrap items-center gap-1 md:gap-4 text-sm font-semibold'>
+          <li>
+            <a href='/'>Home</a>
+          </li>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            stroke-width='1.5'
+            stroke='currentColor'
+            class='size-2'>
+            <path
+              stroke-linecap='round'
+              stroke-linejoin='round'
+              d='M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3'></path>
+          </svg>
+
+          <li>
+            <a href='/writing'>Writing</a>
+          </li>
+        </ul>
+      </nav>
       <div
         class='mx-auto prose max-w-4xl prose-zinc prose-sm md:prose-xl prose-p:font-medium prose-headings:font-medium prose-headings:tracking-tight'>
         <Content />
