@@ -1,43 +1,163 @@
 ---
-title: 'My Journey into Software Development'
-author: 'Houston'
-date: 2025-04-13
-tags: ['programming', 'career', 'learning']
-description: "A personal reflection on my journey into software development, the challenges I faced, and the technologies I'm excited about."
+title: 'Mastering API Testing with Mocking in TypeScript: An Intro to Mock Service Worker'
+author: 'Dylan Brtiz'
+date: 2025-04-17
+tags: ['typescript', 'testing', 'api', 'msw', 'web-development']
+description: 'A comprehensive guide to using Mock Service Worker (MSW) for API testing in TypeScript projects.'
 ---
 
-As someone who's always been fascinated by technology, my journey into software development has been both challenging and rewarding. Today, I want to share some key lessons I've learned along the way.
+Hey fellow developers! 👋 If you're diving into the front-end world and struggling with API testing, you're about to discover your new best friend: Mock Service Worker (MSW). Trust me, this library is a game-changer for TypeScript projects!
 
-## The Beginning
+## What's the Deal with API Mocking?
 
-When I first started coding, I was overwhelmed by the sheer amount of information available. From JavaScript to Python, from React to Node.js - the options seemed endless.
+When building front-end applications, we're constantly hitting APIs — but what happens when those APIs aren't ready? Or when you need to test error states? That's where mocking comes in!
 
-Here's a simple example of my first JavaScript code:
+Mock Service Worker stands out from traditional mocking solutions by intercepting actual network requests right at the browser or Node.js level. No more complicated setup or maintaining separate mock servers!
 
-```javascript
-function sayHello() {
-  console.log('Hello, World!');
+## Why MSW Will Make Your Life Easier
+
+Here's why you should be excited about MSW:
+
+- Works seamlessly in any environment — browser, Node.js, or testing frameworks
+- Intercepts actual network requests giving you realistic testing scenarios
+- Plays perfectly with TypeScript
+- Reuse the same mocks everywhere
+
+## Getting Started with MSW
+
+Let's set up MSW in your project with these simple steps:
+
+### 1. Install the package
+
+```bash
+npm install msw --save-dev
+```
+
+### 2. Create your mock handlers
+
+First, make a directory for your mocks:
+
+```bash
+mkdir src/mocks
+touch src/mocks/handlers.ts
+```
+
+Then define your API mocks in the handlers file:
+
+```typescript
+import { rest } from 'msw';
+
+export const handlers = [
+  rest.get('/api/user', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        id: 1,
+        username: 'john_doe',
+        email: 'john@example.com',
+      })
+    );
+  }),
+];
+```
+
+### 3. Set up the service worker
+
+Create a browser setup file:
+
+```typescript
+// src/mocks/browser.ts
+import { setupWorker } from 'msw';
+import { handlers } from './handlers';
+
+export const worker = setupWorker(...handlers);
+```
+
+Then activate it in your app's entry point:
+
+```typescript
+// src/index.tsx
+if (process.env.NODE_ENV === 'development') {
+  const { worker } = require('./mocks/browser');
+  worker.start();
 }
 ```
 
-## Learning Through Projects
+### 4. For testing environments
 
-I discovered that the best way to learn was through hands-on experience. Building projects taught me more than any tutorial could. Here are some tips that helped me:
+```typescript
+// src/mocks/server.ts
+import { setupServer } from 'msw/node';
+import { handlers } from './handlers';
 
-1. Start small
-2. Code every day
-3. Don't be afraid to make mistakes
-4. Learn from the community
+export const server = setupServer(...handlers);
+```
 
-## Current Technologies I'm Excited About
+In your test setup:
 
-- TypeScript
-- Next.js
-- Tailwind CSS
-- AI/ML integration
+```typescript
+// setupTests.ts
+import { server } from './mocks/server';
 
-## What's Next?
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+```
 
-As I continue my journey, I'm looking forward to exploring more advanced concepts and contributing to open-source projects. The tech world is constantly evolving, and that's what makes it exciting!
+## Level Up Your Mocking Game with TypeScript
 
-Remember: _The best time to start coding was yesterday. The second best time is now._
+One of the coolest things about MSW is how it leverages TypeScript's power:
+
+```typescript
+import { rest } from 'msw';
+import { User } from './types'; // Your User interface
+
+export const handlers = [
+  rest.get<{}, {}, User>('/api/user', (req, res, ctx) => {
+    return res(
+      ctx.json({
+        id: 2,
+        username: 'jane_doe',
+        email: 'jane@example.com',
+      })
+    );
+  }),
+];
+```
+
+## Pro Tips for MSW Success
+
+Here are some tips I've learned from using MSW in production:
+
+- Mock different response states — Success, errors, loading states
+- Keep related endpoints together for better maintainability
+- Combine MSW with Storybook to create component stories with realistic data flows
+- Empty arrays, weird data formats, network timeouts — simulate it all!
+- The more realistic your mocks, the more valuable your tests
+
+Example of error state mocking:
+
+```typescript
+rest.get('/api/users', (req, res, ctx) => {
+  return res(ctx.status(500), ctx.json({ message: 'Internal server error' }));
+});
+```
+
+## MSW vs. Traditional Mocking: Why MSW Wins
+
+I've tried many mocking solutions, and MSW stands out because it:
+
+- Provides realistic network behavior
+- Works in both development and testing
+- Requires minimal setup
+- Supports TypeScript out of the box
+
+No more flaky API calls!
+
+## Conclusion
+
+Implementing MSW in your TypeScript projects will change how you approach development and testing. You'll build more robust applications, catch bugs earlier, and spend less time wrestling with backend dependencies.
+
+Start small — mock just one endpoint and see the difference it makes in your workflow. Then gradually expand your mocks as you get comfortable with the approach.
+
+Happy coding! 🚀
