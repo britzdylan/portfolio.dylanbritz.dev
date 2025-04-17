@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import PostHeader from '../../components/post/post-header.astro';
 // 1. Generate a new path for every collection entry
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -16,38 +17,18 @@ const { Content } = await render(post);
 
 <Layout class=''>
   <article class='bg-neutral-50 w-full flex flex-col'>
-    <header
-      class='p-20 bg-primary-200 h-[calc(100vh)] flex items-center justify-center fixed top-0 left-0 right-0 z-0'>
-      <div class='max-w-4xl mx-auto flex flex-col gap-6'>
-        <h1 class='text-5xl font-medium'>{post.data.title}</h1>
-        <div class='flex flex-col gap-6'>
-          <p class='text-lg font-medium text-primary-600'>
-            {post.data.description}
-          </p>
-          <div class='flex items-center gap-2'>
-            <img
-              src='https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-              alt={post.data.author}
-              class='w-4 h-4 rounded-full'
-            />
-            <h2 class=''>{post.data.author}</h2>
-            <span class='text-sm text-neutral-500'>•</span>
-            <time class='text-sm text-neutral-500'
-              >{post.data.date.toDateString()}</time
-            >
-          </div>
-          <img
-            src='https://framerusercontent.com/images/5Y0IXce2M5azSVw4Vu86Kb6icHA.jpg?scale-down-to=1024'
-            alt=''
-            class='w-full aspect-video object-cover rounded-lg shadow-lg'
-          />
-        </div>
-      </div>
-    </header>
+    <PostHeader
+      title={post.data.title}
+      date={post.data.date}
+      description={post.data.description ?? ''}
+      author={post.data.author}
+      image=''
+    />
     <section
-      class='relative bg-neutral-50 w-full z-10 py-20 mt-[calc(100vh-5rem)] rounded-t-4xl shadow-lg'>
+      class='bg-neutral-50 w-full z-10 py-8 px-2 md:px-6 lg:py-20 mt-[calc(100vh)] rounded-t-4xl shadow-lg'>
       <nav class='max-w-4xl mx-auto pb-5'>
-        <ul class='flex items-center gap-4 text-sm font-semibold'>
+        <ul
+          class='flex flex-wrap items-center gap-1 md:gap-4 text-sm font-semibold'>
           <li>
             <a href='/'>Home</a>
           </li>
@@ -65,28 +46,12 @@ const { Content } = await render(post);
           </svg>
 
           <li>
-            <a href='/writing/featured'>Writing</a>
-          </li>
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-            stroke-width='1.5'
-            stroke='currentColor'
-            class='size-2'>
-            <path
-              stroke-linecap='round'
-              stroke-linejoin='round'
-              d='M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3'></path>
-          </svg>
-
-          <li>
-            <a>{post.data.title}</a>
+            <a href='/writing'>Writing</a>
           </li>
         </ul>
       </nav>
       <div
-        class='mx-auto prose max-w-4xl prose-zinc prose-xl prose-p:font-medium prose-headings:font-medium prose-headings:tracking-tight'>
+        class='mx-auto prose max-w-4xl prose-zinc prose-sm md:prose-xl prose-p:font-medium prose-headings:font-medium prose-headings:tracking-tight'>
         <Content />
       </div>
     </section>
