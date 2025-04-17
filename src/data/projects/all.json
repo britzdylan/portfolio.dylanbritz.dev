@@ -1,0 +1,28 @@
+{
+  "projects": [
+    {
+      "title": "@britzdm",
+      "description": "Daily notes about daily tasks",
+      "link": "https://x.com/britzdm",
+      "icon": "svg"
+    },
+    {
+      "title": "Blak/ui",
+      "description": "Primitive component library for Framer",
+      "link": "https://blakui.framer.website/docs/introduction",
+      "icon": "assets/blakui.avif"
+    },
+    {
+      "title": "DevConOne",
+      "description": "PHP, TypeScript, Vue.js & modern web development insights",
+      "link": "https://blog.dylanbritz.dev/posts",
+      "icon": "assets/dco.jpg"
+    },
+    {
+      "title": "Whispr",
+      "description": "Whispr secure text sharing, privacy & compliance.",
+      "link": "https://whispr.dylanbritz.dev",
+      "icon": null
+    }
+  ]
+}
