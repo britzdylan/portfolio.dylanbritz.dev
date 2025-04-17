@@ -3,7 +3,7 @@
     :href="link"
     target="_blank"
     rel="noopener"
-    class="w-full bg-white/5 rounded-xl p-4 flex items-center gap-3 hover:bg-white/10 transition-colors">
+    class="w-full bg-white/5 rounded-xl p-4 flex items-center gap-3 hover:bg-white/10">
     <div
       class="w-15 h-15 bg-black rounded-lg p-3 flex items-center justify-center">
       <small>{{ title }}</small>
@@ -26,7 +26,6 @@
     title: string;
     description: string;
     link: string;
-    icon?: string;
   }
 
   defineProps<ProjectCardProps>();
