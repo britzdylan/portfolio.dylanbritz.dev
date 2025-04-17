@@ -1,12 +1,17 @@
 <template>
   <motion.li
-    class="pb-6 border-b border-neutral-300 flex flex-col gap-2 cursor-pointer group hover:border-neutral-500"
+    class="transition-all duration-100 ease-linear pb-6 border-b border-neutral-300 flex flex-col gap-2 cursor-pointer group hover:border-neutral-500"
     :initial="{ opacity: 0, y: 20 }"
     :whileInView="{ opacity: 1, y: 0 }"
     :inViewOptions="{ once: true }"
-    :transition="{ duration: 0.3, delay: delay * 0.1, ease: 'easeIn' }">
-    <a :href="url">{{ title }}</a>
-    <div class="flex gap-2">
+    :transition="{ duration: 0.1, delay: delay * 0.1, ease: 'easeIn' }">
+    <a
+      class="group-hover:translate-x-2 transform transition-all duration-100 ease-linear"
+      :href="url"
+      >{{ title }}</a
+    >
+    <div
+      class="group-hover:translate-x-2 transform transition-all duration-100 ease-linear flex gap-2">
       <time class="text-sm text-neutral-500">
         {{ date.toLocaleDateString() }}
       </time>
