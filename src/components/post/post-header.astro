@@ -1,5 +1,5 @@
 ---
-const { title, description, author, date } = Astro.props;
+const { title, description, author, date, imageId } = Astro.props;
 ---
 
 <header
@@ -12,8 +12,8 @@ const { title, description, author, date } = Astro.props;
       </p>
       <div class='flex items-center gap-2'>
         <img
-          :src='image'
-          :alt='`${author} avatar`'
+          src={`/images/${imageId}.avif`}
+          alt={`${author} avatar`}
           class='w-4 h-4 rounded-full'
         />
         <h2 class=''>{author}</h2>
@@ -21,8 +21,8 @@ const { title, description, author, date } = Astro.props;
         <time class='text-sm text-neutral-500'>{date.toDateString()}</time>
       </div>
       <img
-        src='https://framerusercontent.com/images/5Y0IXce2M5azSVw4Vu86Kb6icHA.jpg?scale-down-to=1024'
-        alt=''
+        src={`/images/${imageId}.avif`}
+        alt={title}
         class='w-full aspect-video object-cover rounded-lg shadow-lg'
       />
     </div>
