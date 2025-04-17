@@ -70,9 +70,13 @@ const { Content } = await render(post);
         <Content />
       </div>
       <nav
-        class='max-w-4xl mx-auto py-5 mt-5 border-t border-neutral-300 grid grid-cols-2 gap-2 w-full'>
-        <BackButton post={prevPost} />
-        <BackButton post={nextPost} rotate />
+        class='max-w-4xl mx-auto py-5 mt-5 border-t border-neutral-300 flex justify-end grid-cols-2 gap-2 w-full'>
+        <div class='w-full'>
+          <BackButton post={prevPost} />
+        </div>
+        <div class='w-full'>
+          <BackButton post={nextPost} rotate />
+        </div>
       </nav>
     </section>
   </article>
