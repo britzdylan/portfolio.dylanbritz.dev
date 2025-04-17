@@ -12,7 +12,7 @@ const { title, description, author, date, imageId } = Astro.props;
       </p>
       <div class='flex items-center gap-2'>
         <img
-          src={`/images/${imageId}.jpg`}
+          src={`/images/${imageId}.webp`}
           alt={`${author} avatar`}
           class='w-4 h-4 rounded-full'
         />
@@ -21,7 +21,7 @@ const { title, description, author, date, imageId } = Astro.props;
         <time class='text-sm text-neutral-500'>{date.toDateString()}</time>
       </div>
       <img
-        src={`/images/${imageId}.jpg`}
+        src={`/images/${imageId}.webp`}
         alt={title}
         class='w-full aspect-video object-cover rounded-lg shadow-lg'
       />
