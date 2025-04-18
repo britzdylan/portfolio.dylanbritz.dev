@@ -7,7 +7,9 @@ import { sortByDate } from '../../utils/sortByDate';
 const posts = await getCollection('blog');
 ---
 
-<Layout>
+<Layout
+  title='Web development posts | Dylan Britz'
+  description='Modern, quick and digestible web development tutorials, tips, tricks and insights'>
   <main
     class='container mx-auto px-4 md:px-0 py-8 flex flex-col md:flex-row gap-8 overflow-visible'>
     <div class='mt-1 w-full md:max-w-1/3'>
