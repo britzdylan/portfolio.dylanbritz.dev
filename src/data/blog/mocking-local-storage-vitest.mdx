@@ -1,0 +1,233 @@
+---
+title: 'How to mock and spy on local storage in vitest'
+author: 'Dylan Brtiz'
+date: 2025-04-18
+tags: ['spying', 'testing', 'mocking', 'vitest', 'web-development']
+description: 'Learn effective techniques to mock and spy on localStorage in Vitest, ensuring reliable and isolated tests for your web applications.'
+---
+
+Today we're diving into a super practical topic that'll level up your testing game: how to properly test code that interacts with localStorage using Vitest.
+
+If you've ever been frustrated trying to test components that use browser storage, this guide is for you.
+
+## Why Should You Even Care About Mocking localStorage?
+
+Let's start with the basics. When you're testing code that uses localStorage, you don't want your tests to:
+
+- Mess with your actual browser storage (yikes!)
+- Depend on whatever random data might be in localStorage
+- Break when running in environments without localStorage (like CI pipelines)
+
+That's where mocking and spying come in! They let you create a fake version of localStorage that you can control completely. Pretty cool, right?
+
+## Setting Up Your Test Environment
+
+First things first, you need a browser-like environment in your Vitest setup. Here's how to do that:
+
+```js
+// vite.config.js
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  test: {
+    environment: 'jsdom', // You could also use 'happy-dom'
+  },
+});
+```
+
+This gives you access to the window object and its localStorage property in your tests.
+
+## Option 1: Manual Mocking (DIY Style)
+
+You can create your own localStorage mock from scratch. It looks similar and does the job for testing:
+
+```js
+let originalLocalStorage;
+
+beforeAll(() => {
+  originalLocalStorage = window.localStorage;
+  window.localStorage = {
+    store: {},
+    getItem(key) {
+      return this.store[key] ?? null;
+    },
+    setItem(key, value) {
+      this.store[key] = value;
+    },
+    removeItem(key) {
+      delete this.store[key];
+    },
+    clear() {
+      this.store = {};
+    },
+  };
+});
+
+afterAll(() => {
+  window.localStorage = originalLocalStorage;
+});
+```
+
+This approach gives you total control, but requires more setup code than some alternatives.
+
+## Option 2: Use a Package (The Easy Button)
+
+Why reinvent the wheel? There's a package called `vitest-localstorage-mock` that does all the heavy lifting for you:
+
+```bash
+npm install -D vitest-localstorage-mock
+```
+
+Then just tell Vitest to use it:
+
+```js
+// vite.config.js
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  test: {
+    setupFiles: ['vitest-localstorage-mock'],
+  },
+});
+```
+
+Boom! Now you've got a fully mocked localStorage and sessionStorage with zero effort. This is perfect if you just want things to work without fussing over implementation details.
+
+## Spying on localStorage Methods
+
+Now for the really fun part - spying on localStorage to see what your code is doing behind the scenes!
+
+```js
+import { vi } from 'vitest';
+
+// Setup the spies
+const getItemSpy = vi.spyOn(Storage.prototype, 'getItem');
+const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+
+// Clean up after each test
+afterEach(() => {
+  getItemSpy.mockClear();
+  setItemSpy.mockClear();
+  localStorage.clear();
+});
+```
+
+This lets you verify exactly how your code interacts with localStorage:
+
+```js
+test('should save user preferences', () => {
+  // Run your code that should use localStorage
+  saveUserPreferences({ theme: 'dark' });
+
+  // Check if localStorage was called correctly
+  expect(setItemSpy).toHaveBeenCalledWith(
+    'userPrefs',
+    JSON.stringify({ theme: 'dark' })
+  );
+});
+```
+
+## Controlling What localStorage Returns
+
+Sometimes you need to test how your code handles different localStorage scenarios. You can make localStorage return whatever you want:
+
+```js
+// Make localStorage.getItem always return this value for any key
+getItemSpy.mockReturnValue('fake-user-data');
+
+// Or get more specific with different return values for sequential calls
+getItemSpy
+  .mockReturnValueOnce('first call')
+  .mockReturnValueOnce('second call')
+  .mockReturnValue('all other calls');
+```
+
+## Real-World Example: Testing a Dark Mode Toggle
+
+Let's put it all together with a practical example - testing a component that saves theme preferences:
+
+```js
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { render, fireEvent } from '@testing-library/react';
+import ThemeToggle from './ThemeToggle';
+
+describe('ThemeToggle component', () => {
+  // Set up our spies
+  const getItemSpy = vi.spyOn(Storage.prototype, 'getItem');
+  const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+
+  beforeEach(() => {
+    // Start each test with a clean slate
+    localStorage.clear();
+    getItemSpy.mockClear();
+    setItemSpy.mockClear();
+  });
+
+  it('loads saved theme from localStorage on mount', () => {
+    // Pretend we have a saved theme
+    getItemSpy.mockReturnValue('dark');
+
+    const { getByTestId } = render(<ThemeToggle />);
+
+    // Verify localStorage was checked
+    expect(getItemSpy).toHaveBeenCalledWith('theme');
+
+    // Verify the UI shows dark mode is active
+    expect(getByTestId('theme-toggle')).toHaveTextContent(
+      'Switch to Light Mode'
+    );
+  });
+
+  it('saves theme to localStorage when toggled', () => {
+    const { getByTestId } = render(<ThemeToggle />);
+
+    // Click the toggle button
+    fireEvent.click(getByTestId('theme-toggle'));
+
+    // Verify localStorage was updated
+    expect(setItemSpy).toHaveBeenCalledWith('theme', 'dark');
+  });
+});
+```
+
+## Pro Tips for Better Tests
+
+1. **Always clean up after each test** using `afterEach`. This prevents test bleeding where one test affects another.
+
+2. **Reset your spies before or after each test** with `mockClear()` to start fresh.
+
+3. **Be specific in your assertions** - don't just check if a method was called, check it was called with the right arguments.
+
+4. **When possible, assert both the method calls AND the actual effects** of those calls (like checking DOM updates).
+
+## Choosing the Right Approach
+
+Here's a quick decision guide:
+
+- **Need something quick and reliable?** Use the `vitest-localstorage-mock` package.
+- **Want more control or have unusual requirements?** Create a manual mock.
+- **Need to verify how your code uses localStorage?** Add spies with `vi.spyOn`.
+- **Testing edge cases?** Control return values with `mockReturnValue` or `mockReturnValueOnce`.
+
+## Wrapping Up
+
+Testing localStorage doesn't have to be a headache! With these techniques, you can write tests that are:
+
+- Isolated from the real browser environment
+- Predictable and consistent
+- Able to verify exactly how your code interacts with storage
+
+So go forth and test that localStorage code like a pro! 💪
+
+Sources:
+
+- https://gist.github.com/mustafadalga/fbb9e1bab21b290131d4f721e291d51a,
+- https://www.npmjs.com/package/vitest-localstorage-mock,
+- https://runthatline.com/vitest-mock-localstorage/,
+- https://vitest.dev/guide/mocking.html,
+- https://stevekinney.net/courses/testing/mock-spy-secret-input-example,
+- https://blog.dylanbritz.dev/posts/mocking-and-spying-on-local-storage-in-vitest,
+- https://codesandbox.io/examples/package/vitest-localstorage-mock,
+- https://vitest.dev/guide/mocking,
+- https://stevekinney.net/courses/testing/testing-local-storage,
+- https://blog.logrocket.com/advanced-guide-vitest-testing-mocking/
