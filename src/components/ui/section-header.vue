@@ -5,9 +5,9 @@
     :inViewOptions="{ once: true }"
     :transition="{ duration: 1, delay: 0.2, ease: 'easeOut' }"
     class="w-full border-t-2 border-neutral-800 sticky top-4 pt-1 overflow-hidden">
-    <h1 class="text-2xl md:text-3xl font-medium">
+    <h2 class="text-2xl md:text-3xl font-medium">
       {{ title }}
-    </h1>
+    </h2>
   </motion.div>
 </template>
 

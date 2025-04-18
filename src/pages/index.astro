@@ -1,81 +1,96 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import SectionHeader from '../components/ui/section-header.vue';
+import ExperienceCard from '../components/ui/experience-card.vue';
+import SkillsCard from '../components/ui/skills-card.vue';
 import ProjectCard from '../components/ui/project-card.vue';
+const work = await getCollection('work');
 const projects = await getCollection('projects');
+const skills = [
+  'Full Stack Web Development',
+  'UX Design',
+  'Framer Development',
+  'Product Development',
+];
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<!doctype html>
-<!-- <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dylan Britz - Full Stack developer</title>
-    <meta
-      name="description"
-      content="A full stack developer with over half a decade of experience in web, mobile & cloud development. Skilled in working in startups & SME's and adept at collaborating with cross-functional teams." />
-
-    <link rel="icon" href="assets/favicon.ico" />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="assets/apple-touch-icon.png" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="assets/favicon-32x32.png" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="assets/favicon-16x16.png" />
-    <link rel="manifest" href="assets/site.webmanifest" />
-
-    <link
-      rel="icon"
-      href="assets/favicon.ico"
-      type="image/x-icon"
-      media="(prefers-color-scheme: light)" />
-
-    <link
-      rel="icon"
-      href="assets/favicon-dark.ico"
-      type="image/x-icon"
-      media="(prefers-color-scheme: dark)" />
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap"
-      rel="stylesheet" />
-
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-      }
-    </style>
-  </head> -->
 <Layout>
-  <!-- Main Container -->
-  <div class='w-full flex items-center p-6'>
-    <!-- Background Image -->
-    <div class='fixed h-screen w-screen bg-neutral-900 inset-0 z-0'>
-      <!-- <img
-        src='/background.avif'
-        alt='Background'
-        class='w-full h-full object-cover'
-      /> -->
-    </div>
-
-    <!-- Content Card -->
+  <main class='flex flex-col'>
+    <section
+      class='container mx-auto px-4 md:px-0 py-24 flex flex-col gap-10 overflow-visible'>
+      <!-- Skills -->
+      <div class='mt-1 w-full'>
+        <SectionHeader client:load title='About' />
+      </div>
+      <div class='w-full flex flex-col gap-4'>
+        <p class='text-xl'>
+          Seasoned full stack developer with over 8 years of expertise crafting
+          sophisticated web applications and bringing innovative tech products
+          from concept to deployment. - My background in both tech and fitness
+          helps me create solutions for people like me, busy professionals who
+          want efficient tools that actually work.
+        </p>
+        <div class='w-full flex flex-col gap-2'>
+          {
+            projects.map((post, index) => (
+              <ProjectCard
+                title={post.data.title}
+                description={post.data.description}
+                link={post.data.link}
+                offset={index + 1}
+              />
+            ))
+          }
+        </div>
+      </div>
+    </section>
+    <hr class='border-neutral-200' />
+    <section
+      class='container mx-auto px-4 md:px-0 py-24 flex flex-col md:flex-row gap-8 overflow-visible'>
+      <div class='mt-1 w-full md:max-w-1/3'>
+        <SectionHeader client:load title='Experience' />
+      </div>
+      <div class='w-full'>
+        <ul class='font-medium flex flex-col gap-8'>
+          {
+            work.map((item, index) => (
+              <ExperienceCard
+                client:load
+                title={item.data.title}
+                company={item.data.company}
+                date={item.data.date}
+                delay={index}
+              />
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+    <hr class='border-neutral-200' />
+    <section
+      class='container mx-auto px-4 md:px-0 py-24 flex flex-col gap-10 overflow-visible'>
+      <!-- Skills -->
+      <div class='mt-1 w-full'>
+        <SectionHeader client:load title='Skills' />
+      </div>
+      <div class='w-full'>
+        <ul class='text-lg md:text-xl font-medium flex flex-col gap-8'>
+          {
+            skills.map((item, index) => (
+              <SkillsCard client:load title={item} delay={index} />
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+  <!-- <div class='w-full flex items-center p-6'>
     <div
       class='w-full max-w-6xl mx-auto backdrop-blur-[90px] bg-white/10 rounded-3xl p-4 flex flex-col items-center gap-6 text-white'>
-      <!-- Profile Section -->
       <div class='flex flex-col gap-1 w-full'>
-        <!-- Profile Image -->
         <div
           class='relative w-7 h-7 rounded-full border border-black/10 overflow-hidden'>
           <picture>
@@ -93,7 +108,6 @@ const projects = await getCollection('projects');
           </picture>
         </div>
 
-        <!-- Name and Verification -->
         <div class='flex items-center gap-2'>
           <h1 class='text-xl font-bold'>Dylan Britz</h1>
           <div class='w-3 h-3 text-blue-500'>
@@ -105,7 +119,6 @@ const projects = await getCollection('projects');
           </div>
         </div>
 
-        <!-- Bio -->
         <p class='text-left text-base max-w-xl'>
           Full stack developer with 8+ years of experience specializing in
           modern web applications and e-commerce solutions. Expert in
@@ -115,7 +128,6 @@ const projects = await getCollection('projects');
         </p>
       </div>
 
-      <!-- Social Links -->
       <div class='w-full grid grid-cols-2 gap-2'>
         {
           projects.map((post) => (
@@ -128,5 +140,5 @@ const projects = await getCollection('projects');
         }
       </div>
     </div>
-  </div>
+  </div> -->
 </Layout>

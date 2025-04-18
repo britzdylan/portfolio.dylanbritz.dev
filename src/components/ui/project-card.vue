@@ -3,20 +3,29 @@
     :href="link"
     target="_blank"
     rel="noopener"
-    class="w-full bg-white/5 rounded-xl p-4 flex items-center gap-3 hover:bg-white/10">
-    <div
-      class="w-15 h-15 bg-black rounded-lg p-3 flex items-center justify-center">
+    :style="{ top: `calc(var(--spacing) * ${offset})` }"
+    class="w-full flex items-start gap-2 py-2 group">
+    <!-- <div
+      class="w-15 h-15 bg-black rounded-lg flex items-center justify-center text-white">
       <small>{{ title }}</small>
-    </div>
-    <div class="flex-1">
-      <h2 class="font-bold text-lg">{{ title }}</h2>
-      <p class="text-sm">{{ description }}</p>
-    </div>
-    <div class="">
-      <svg class="w-4 h-4" viewBox="0 0 18 18" fill="currentColor">
-        <path
-          d="M16.031 7.313c0 .465-.378.843-.844.843-.465 0-.843-.378-.843-.843V4.852L10.159 9.036a1.089 1.089 0 01-1.195 0 1.089 1.089 0 010-1.195l4.184-4.185h-2.461c-.465 0-.843-.378-.843-.843 0-.466.378-.844.843-.844h4.5c.466 0 .844.378.844.844v4.5zM12.938 9c-.466 0-.844.378-.844.844v4.5H3.656V5.906h4.5c.466 0 .844-.378.844-.843 0-.466-.378-.844-.844-.844h-4.78c-.778 0-1.407.63-1.407 1.406v9c0 .777.63 1.406 1.406 1.406h9c.777 0 1.406-.629 1.406-1.406v-4.78c0-.466-.378-.844-.843-.844z"></path>
-      </svg>
+    </div> -->
+    <div class="flex flex-col items-start">
+      <h3 class="font-medium text-2xl md:text-3xl flex gap-1 items-center">
+        {{ title
+        }}<svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6 mt-1 hidden group-hover:block text-primary-500">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+        </svg>
+      </h3>
+      <p class="text-lg text-neutral-600">{{ description }}</p>
     </div>
   </a>
 </template>
@@ -26,6 +35,7 @@
     title: string;
     description: string;
     link: string;
+    offset: number;
   }
 
   defineProps<ProjectCardProps>();

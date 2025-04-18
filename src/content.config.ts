@@ -26,5 +26,14 @@ const projects = defineCollection({
   }),
 });
 
+const work = defineCollection({
+  loader: glob({ pattern: '**/*.json', base: './src/data/work' }),
+  schema: z.object({
+    title: z.string(),
+    company: z.string(),
+    date: z.string(),
+  }),
+});
+
 // 4. Export a single `collections` object to register your collection(s)
-export const collections = { blog, projects };
+export const collections = { blog, projects, work };

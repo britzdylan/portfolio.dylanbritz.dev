@@ -1,0 +1,35 @@
+<template>
+  <motion.li
+    class="transition-all duration-100 ease-linear pb-6 border-b border-neutral-300 flex flex-col gap-1"
+    :initial="{ opacity: 0, y: 20 }"
+    :whileInView="{ opacity: 1, y: 0 }"
+    :inViewOptions="{ once: true }"
+    :transition="{ duration: 0.1, delay: delay * 0.1, ease: 'easeIn' }">
+    <h2 class="text-2xl md:text-3xl">
+      {{ title }}
+    </h2>
+
+    <div class="flex flex-col gap-2">
+      <p class="text-neutral-500">
+        {{ company }}
+      </p>
+      <p class="text-lg text-neutral-500">
+        {{ date }}
+      </p>
+    </div>
+  </motion.li>
+</template>
+
+<script setup lang="ts">
+  import { motion } from 'motion-v';
+  import { defineProps } from 'vue';
+
+  type Props = {
+    title: string;
+    company: string;
+    date: string;
+    delay: number;
+  };
+
+  defineProps<Props>();
+</script>
