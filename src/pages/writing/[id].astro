@@ -30,7 +30,7 @@ const { post, prevPost, nextPost } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<Layout class=''>
+<Layout title={post.data.title} description={post.data.description ?? ''}>
   <article class='bg-neutral-50 w-full flex flex-col'>
     <PostHeader
       title={post.data.title}

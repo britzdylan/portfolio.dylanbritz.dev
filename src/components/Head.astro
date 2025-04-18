@@ -1,28 +1,77 @@
 ---
-const { title = 'My Astro Website', ...props } = Astro.props;
+import { Seo } from 'astro-seo-meta';
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  icon?: string;
+  themeColor?: string;
+  colorScheme?: string;
+  robots?: string;
+}
+const {
+  title = 'Dylan Britz',
+  description = 'Full stack developer with 8+ years of experience specializing in modern web applications and e-commerce solutions.',
+  robots = 'index, follow',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
-<link rel='sitemap' href='/sitemap-index.xml' />
-<title>{title}</title>
-<meta name='description' content='Welcome to my new Astro site!' />
+<head>
+  <meta charset='UTF-8' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+  <meta name='author' content='Dylan Britz' />
+  <link rel='canonical' href={canonicalURL} />
+  <link rel='sitemap' href='/sitemap-index.xml' />
 
-<!-- Web analytics -->
-<script
-  data-goatcounter='https://my-account.goatcounter.com/count'
-  async
-  src='//gc.zgo.at/count.js'></script>
+  <!-- Favicon -->
+  <link rel='icon' type='image/png' sizes='32x32' href='/favicon-32x32.png' />
+  <link rel='icon' type='image/png' sizes='16x16' href='/favicon-16x16.png' />
+  <link rel='shortcut icon' href='/favicon.ico' />
 
-<!-- Open Graph tags -->
-<meta property='og:title' content='My New Astro Website' />
-<meta property='og:type' content='website' />
-<meta property='og:url' content='http://www.example.com/' />
-<meta property='og:description' content='Welcome to my new Astro site!' />
-<meta
-  property='og:image'
-  content='https://www.example.com/_astro/seo-banner.BZD7kegZ.webp'
-/>
-<meta property='og:image:alt' content='' />
+  <!-- Apple Touch Icons -->
+  <link rel='apple-touch-icon' sizes='180x180' href='/apple-touch-icon.png' />
 
-<!-- <SomeOtherTags />
+  <!-- Android/Chrome Icons -->
+  <link
+    rel='icon'
+    type='image/png'
+    sizes='192x192'
+    href='/android-chrome-192x192.png'
+  />
+  <link
+    rel='icon'
+    type='image/png'
+    sizes='512x512'
+    href='/android-chrome-512x512.png'
+  />
+
+  <!-- Theme Color -->
+  <meta name='theme-color' content='#000000' />
+  <!-- Web analytics -->
+  <slot>
+    <Seo
+      title={title}
+      description={description}
+      icon='/favicon.ico'
+      themeColor='#000000'
+      colorScheme='light'
+      robots={robots}
+      facebook={{
+        image: '/facebook.png',
+        url: 'https://dylanbritz.dev',
+        type: 'website',
+      }}
+      twitter={{
+        image: '/twitter.png',
+        site: '@britzdm',
+        card: 'summary',
+      }}
+    />
+  </slot>
+  <!-- <SomeOtherTags />
 
 <Favicon /> -->
+</head>
