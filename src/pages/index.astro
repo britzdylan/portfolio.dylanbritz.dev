@@ -35,6 +35,7 @@ const skills = [
       {
         projects.map((post, index) => (
           <ProjectCard
+            client:load
             title={post.data.title}
             description={post.data.description}
             link={post.data.link}

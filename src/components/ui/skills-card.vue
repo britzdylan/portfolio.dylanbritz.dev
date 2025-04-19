@@ -1,6 +1,6 @@
 <template>
   <motion.li
-    class="transition-all duration-100 ease-linear pb-6 border-b border-neutral-300 flex flex-col gap-1"
+    class="pb-6 border-b border-neutral-300 flex flex-col gap-1"
     :initial="{ opacity: 0, y: 20 }"
     :whileInView="{ opacity: 1, y: 0 }"
     :inViewOptions="{ once: true }"

@@ -1,9 +1,12 @@
 <template>
-  <a
+  <motion.a
+    :initial="{ opacity: 0, y: 20 }"
+    :whileInView="{ opacity: 1, y: 0 }"
+    :inViewOptions="{ once: true }"
+    :transition="{ duration: 0.1, delay: offset * 0.1, ease: 'easeIn' }"
     :href="link"
     target="_blank"
     rel="noopener"
-    :style="{ top: `calc(var(--spacing) * ${offset})` }"
     class="w-full flex items-start gap-2 py-2 group">
     <div class="flex flex-col items-start">
       <h3 class="flex gap-1 items-center h2">
@@ -23,10 +26,12 @@
       </h3>
       <p class="text-neutral-600">{{ description }}</p>
     </div>
-  </a>
+  </motion.a>
 </template>
 
 <script setup lang="ts">
+  import { motion } from 'motion-v';
+
   interface ProjectCardProps {
     title: string;
     description: string;
@@ -36,4 +41,3 @@
 
   defineProps<ProjectCardProps>();
 </script>
-<style lang="scss" scoped></style>
