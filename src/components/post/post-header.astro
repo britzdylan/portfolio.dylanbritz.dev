@@ -5,20 +5,22 @@ const { title, description, author, date, imageId } = Astro.props;
 <header
   class='p-2 md:p-6 lg:p-20 bg-primary-200 flex items-center justify-center'>
   <div class='max-w-4xl mx-auto flex flex-col gap-2 md:gap-6'>
-    <h1 class='text-xl md:text-5xl font-medium'>{title}</h1>
+    <h1 class='h2'>{title}</h1>
     <div class='flex flex-col gap-2 md:gap-6'>
-      <p class='md:text-lg font-medium text-primary-600'>
+      <p class='p text-primary-600'>
         {description}
       </p>
       <div class='flex items-center gap-2'>
         <img
-          src={`/profile.webp`}
+          src={`/profile.jpg`}
           alt={`${author} avatar`}
           class='w-4 h-4 rounded-full'
+          width='32px'
+          height='32px'
         />
-        <h2 class=''>{author}</h2>
-        <span class='text-sm text-neutral-500'>•</span>
-        <time class='text-sm text-neutral-500'>{date.toDateString()}</time>
+        <h2 class='p'>{author}</h2>
+        <span class='p text-neutral-500'>•</span>
+        <time class='p text-neutral-500'>{date.toDateString()}</time>
       </div>
       <img
         src={`/images/${imageId}.png`}
