@@ -1,0 +1,212 @@
+---
+title: 'Mastering Vue 3 Composables Testing with Vitest'
+author: 'Dylan Brtiz'
+date: 2025-04-19
+tags: ['spying', 'testing', 'vue3', 'vitest', 'web-development']
+description: 'Learn to effectively test Vue 3 composables with lifecycle hooks using Vitest. Discover best practices and patterns to simplify your testing process.'
+---
+
+So you've built some awesome Vue 3 composables that use lifecycle hooks, and now you're scratching your head about how to test them? Don't worry—I've been there too! Testing composables that rely on Vue's lifecycle hooks isn't as straightforward as testing regular JavaScript functions, but with the right approach, it's totally doable.
+
+Let's dive into how to properly test these special composables with Vitest!
+
+## Why Testing Lifecycle Hooks Is Tricky
+
+If you've tried something like this:
+
+```js
+import { useMyComposable } from './useMyComposable';
+
+test('my composable works', () => {
+  const result = useMyComposable();
+  // Why aren't my onMounted effects running?! 😱
+});
+```
+
+...you probably noticed that your lifecycle hooks never fired. That's because hooks like `onMounted` and `onUnmounted` need a Vue component context to work properly.
+
+## The Solution: The withSetup Pattern
+
+The key to testing lifecycle-dependent composables is creating a temporary Vue component that can properly trigger those lifecycle events. Here's how to set it up:
+
+```js
+// test-utils.js
+import { createApp } from 'vue';
+
+export function withSetup(composable) {
+  let result;
+
+  // Create a mini Vue app that uses our composable
+  const app = createApp({
+    setup() {
+      result = composable();
+      return () => {};
+    },
+  });
+
+  // Mount it to trigger lifecycle hooks
+  app.mount(document.createElement('div'));
+
+  // Return both results and app (for cleanup)
+  return [result, app];
+}
+```
+
+This helper function:
+
+1. Creates a tiny Vue app
+2. Executes your composable in its setup function
+3. Mounts the app (triggering onMounted hooks)
+4. Returns both your composable's return values and the app instance (so you can unmount it later)
+
+## Let's Write Some Tests!
+
+Here's how to use this pattern with Vitest:
+
+```js
+import { withSetup } from './test-utils';
+import { useMyComposable } from './useMyComposable';
+import { describe, it, expect } from 'vitest';
+
+describe('useMyComposable', () => {
+  it('initializes data on mount', () => {
+    // The magic happens here!
+    const [result, app] = withSetup(() => useMyComposable());
+
+    // Test mounted state
+    expect(result.isReady.value).toBe(true);
+
+    // Always clean up by unmounting (this triggers onUnmounted hooks)
+    app.unmount();
+  });
+
+  it('cleans up resources when unmounted', () => {
+    const [result, app] = withSetup(() => useMyComposable());
+
+    // Unmount to trigger the onUnmounted lifecycle hook
+    app.unmount();
+
+    // Test that cleanup happened correctly
+    expect(result.cleanupRan.value).toBe(true);
+  });
+});
+```
+
+## Real-World Example: Testing a Window Resize Composable
+
+Let's look at a practical example. Imagine you have a composable that tracks window width and cleans up event listeners properly:
+
+```js
+// useWindowWidth.js
+import { ref, onMounted, onUnmounted } from 'vue';
+
+export function useWindowWidth() {
+  const width = ref(window.innerWidth);
+
+  function updateWidth() {
+    width.value = window.innerWidth;
+  }
+
+  onMounted(() => window.addEventListener('resize', updateWidth));
+  onUnmounted(() => window.removeEventListener('resize', updateWidth));
+
+  return { width };
+}
+```
+
+Here's how to test it:
+
+```js
+import { withSetup } from './test-utils';
+import { useWindowWidth } from './useWindowWidth';
+import { describe, it, expect } from 'vitest';
+
+describe('useWindowWidth', () => {
+  it('tracks window width when resized', () => {
+    const [result, app] = withSetup(() => useWindowWidth());
+
+    // Simulate resize event
+    window.innerWidth = 800;
+    window.dispatchEvent(new Event('resize'));
+
+    expect(result.width.value).toBe(800);
+
+    // Clean up
+    app.unmount();
+  });
+});
+```
+
+## Advanced Testing Scenarios
+
+### Testing with provide/inject
+
+If your composable uses Vue's dependency injection, you can extend the withSetup helper:
+
+```js
+export function withSetupAndProvide(composable, provides = {}) {
+  let result;
+  const app = createApp({
+    setup() {
+      // Set up provided values
+      Object.entries(provides).forEach(([key, value]) => {
+        provide(key, value);
+      });
+
+      result = composable();
+      return () => {};
+    },
+  });
+
+  app.mount(document.createElement('div'));
+  return [result, app];
+}
+```
+
+### Testing async operations
+
+For composables with async operations in lifecycle hooks:
+
+```js
+it('loads data asynchronously on mount', async () => {
+  const [result, app] = withSetup(() => useAsyncData());
+
+  // Wait for async operations to complete
+  await flushPromises();
+
+  expect(result.data.value).toEqual({ name: 'Test Data' });
+  app.unmount();
+});
+```
+
+## Best Practices
+
+1. **Always clean up**: Call `app.unmount()` in your tests to trigger onUnmounted hooks
+2. **Test the public API**: Focus on testing what the composable returns, not internal details
+3. **Test side-effect cleanup**: Especially important for composables that add event listeners
+4. **Keep tests focused**: Each test should verify one specific behavior
+
+## When to Use Different Testing Approaches
+
+| Composable Type      | Testing Approach                      |
+| -------------------- | ------------------------------------- |
+| Pure reactivity only | Direct invocation (no helper needed)  |
+| Uses lifecycle hooks | Use withSetup pattern                 |
+| Uses provide/inject  | Use withSetupAndProvide pattern       |
+| Has async operations | Use withSetup + await flushPromises() |
+
+## Now go forth and test those composables with confidence! Your future self (and teammates) will thank you.
+
+---
+
+Sources:
+
+- https://vuejs.org/guide/scaling-up/testing,https://alexop.dev/posts/how-to-test-vue-composables/,
+- https://dev.to/jacobandrewsky/good-practices-and-design-patterns-for-vue-composables-24lk,
+- https://test-utils.vuejs.org/guide/advanced/reusability-composition,
+- https://mayashavin.com/articles/testing-components-with-vitest,
+- https://dev.to/jacobandrewsky/testing-vue-components-with-vitest-5c21,
+- https://www.brightsec.com/blog/vue-unit-testing/,
+- https://blog.logrocket.com/guide-vitest-automated-testing-vue-components/,
+- https://vuejs.org/guide/reusability/composables,
+- https://sciendo.com/2/download/xRsimZKFNLxetshcHqfSjR_JAfScjX1ssTKLM0XFUk.pdf

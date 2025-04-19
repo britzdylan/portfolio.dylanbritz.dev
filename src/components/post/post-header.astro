@@ -18,9 +18,9 @@ const { title, description, author, date, imageId } = Astro.props;
           width='32px'
           height='32px'
         />
-        <h2 class='p'>{author}</h2>
-        <span class='p text-neutral-500'>•</span>
-        <time class='p text-neutral-500'>{date.toDateString()}</time>
+        <p class='text-sm'>{author}</p>
+        <span class='text-sm text-neutral-500'>•</span>
+        <time class='text-sm text-neutral-500'>{date.toDateString()}</time>
       </div>
       <img
         src={`/images/${imageId}.png`}
