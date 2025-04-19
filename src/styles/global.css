@@ -50,3 +50,21 @@
   --color-neutral-900: var(--color-zinc-900);
   --color-neutral-950: var(--color-zinc-950);
 }
+
+@layer base {
+h1, .h1 {
+  @apply text-2xl/snug md:text-3xl/snug lg:text-4xl/snug font-medium;
+}
+
+h2, .h2 {
+  @apply text-xl/snug md:text-2xl/snug lg:text-3xl/snug font-medium;
+}
+
+h3, .h3 {
+  @apply text-lg/snug md:text-xl/snug lg:text-2xl/snug font-medium ;
+}
+
+p, .p {
+ @apply text-base/relaxed lg:text-lg/relaxed;
+}
+}

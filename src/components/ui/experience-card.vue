@@ -5,15 +5,15 @@
     :whileInView="{ opacity: 1, y: 0 }"
     :inViewOptions="{ once: true }"
     :transition="{ duration: 0.1, delay: delay * 0.1, ease: 'easeIn' }">
-    <h2 class="text-2xl md:text-3xl">
+    <h3 class="h2">
       {{ title }}
-    </h2>
+    </h3>
 
-    <div class="flex flex-col gap-2">
-      <p class="text-neutral-500">
+    <div class="flex flex-col gap-2 text-neutral-600">
+      <p class="text-sm">
         {{ company }}
       </p>
-      <p class="text-lg text-neutral-500">
+      <p>
         {{ date }}
       </p>
     </div>

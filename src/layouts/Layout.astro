@@ -12,6 +12,19 @@ const props = Astro.props;
 import { date } from 'astro:schema';
 import Head from '../components/Head.astro';
 import '../styles/global.css';
+
+const links = [
+  {
+    title: 'X Profile',
+    link: '#',
+    type: 'x',
+  },
+  {
+    title: 'X Profile',
+    link: '#',
+    type: 'linkedin',
+  },
+];
 ---
 
 <!doctype html>
@@ -20,6 +33,70 @@ import '../styles/global.css';
 
   <body
     class='overflow-visible min-h-screen bg-neutral-50 text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100 flex flex-col'>
+    <header
+      class='z-10 w-full text-lg font-medium py-4 px-4 md:px-0 border-b border-neutral-200'>
+      <div class='container mx-auto flex justify-between items-center'>
+        <a href='/' class='font-bold text-sm'>Dylan Britz</a>
+        <div class='flex gap-2 items-center'>
+          {
+            links.map((link) => (
+              <a target='_blank' href={link.link} title={link.title}>
+                {link.type === 'x' ? (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    shape-rendering='geometricPrecision'
+                    text-rendering='geometricPrecision'
+                    image-rendering='optimizeQuality'
+                    fill-rule='evenodd'
+                    clip-rule='evenodd'
+                    class='size-4'
+                    viewBox='0 0 512 509.64'>
+                    <>
+                      <rect
+                        width='512'
+                        height='509.64'
+                        rx='115.61'
+                        ry='115.61'
+                      />
+                      <path
+                        fill='#fff'
+                        fill-rule='nonzero'
+                        d='M323.74 148.35h36.12l-78.91 90.2 92.83 122.73h-72.69l-56.93-74.43-65.15 74.43h-36.14l84.4-96.47-89.05-116.46h74.53l51.46 68.04 59.53-68.04zm-12.68 191.31h20.02l-129.2-170.82H180.4l130.66 170.82z'
+                      />
+                    </>
+                  </svg>
+                ) : null}
+
+                {link.type === 'linkedin' ? (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    shape-rendering='geometricPrecision'
+                    text-rendering='geometricPrecision'
+                    image-rendering='optimizeQuality'
+                    fill-rule='evenodd'
+                    clip-rule='evenodd'
+                    class='size-4'
+                    viewBox='0 0 512 509.64'>
+                    <>
+                      <rect
+                        width='512'
+                        height='509.64'
+                        rx='115.61'
+                        ry='115.61'
+                      />
+                      <path
+                        fill='#fff'
+                        d='M204.97 197.54h64.69v33.16h.94c9.01-16.16 31.04-33.16 63.89-33.16 68.31 0 80.94 42.51 80.94 97.81v116.92h-67.46l-.01-104.13c0-23.81-.49-54.45-35.08-54.45-35.12 0-40.51 25.91-40.51 52.72v105.86h-67.4V197.54zm-38.23-65.09c0 19.36-15.72 35.08-35.08 35.08-19.37 0-35.09-15.72-35.09-35.08 0-19.37 15.72-35.08 35.09-35.08 19.36 0 35.08 15.71 35.08 35.08zm-70.17 65.09h70.17v214.73H96.57V197.54z'
+                      />
+                    </>
+                  </svg>
+                ) : null}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </header>
     <slot />
     <footer class='flex items-center justify-center py-4 gap-1'>
       © Copyright {new Date().getFullYear()}

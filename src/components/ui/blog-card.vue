@@ -6,17 +6,17 @@
     :inViewOptions="{ once: true }"
     :transition="{ duration: 0.1, delay: delay * 0.1, ease: 'easeIn' }">
     <a
-      class="group-hover:translate-x-2 transform transition-all duration-100 ease-linear"
+      class="group-hover:translate-x-2 transform transition-all duration-100 ease-linear h3"
       :href="url"
       >{{ title }}</a
     >
     <div
-      class="group-hover:translate-x-2 transform transition-all duration-100 ease-linear flex gap-2">
-      <time class="text-sm text-neutral-500">
+      class="group-hover:translate-x-2 transform transition-all duration-100 ease-linear flex gap-2 p">
+      <time class="text-neutral-500">
         {{ date.toLocaleDateString() }}
       </time>
-      <span class="text-sm text-neutral-500"> • </span>
-      <span class="text-sm text-neutral-500">{{ author }}</span>
+      <span class="text-neutral-500"> • </span>
+      <span class="text-neutral-500">{{ author }}</span>
     </div>
   </motion.li>
 </template>

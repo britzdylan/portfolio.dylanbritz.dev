@@ -5,9 +5,9 @@
     :whileInView="{ opacity: 1, y: 0 }"
     :inViewOptions="{ once: true }"
     :transition="{ duration: 0.1, delay: delay * 0.1, ease: 'easeIn' }">
-    <h2 class="text-2xl md:text-3xl">
+    <h3 class="h2">
       {{ title }}
-    </h2>
+    </h3>
   </motion.li>
 </template>
 

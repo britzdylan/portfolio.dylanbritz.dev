@@ -5,6 +5,7 @@ import SectionHeader from '../components/ui/section-header.vue';
 import ExperienceCard from '../components/ui/experience-card.vue';
 import SkillsCard from '../components/ui/skills-card.vue';
 import ProjectCard from '../components/ui/project-card.vue';
+import PageSection from '../components/PageSection.astro';
 const work = await getCollection('work');
 const projects = await getCollection('projects');
 const skills = [
@@ -19,126 +20,54 @@ const skills = [
 
 <Layout>
   <main class='flex flex-col'>
-    <section
-      class='container mx-auto px-4 md:px-0 py-24 flex flex-col gap-10 overflow-visible'>
-      <!-- Skills -->
-      <div class='mt-1 w-full'>
-        <SectionHeader client:load title='About' />
-      </div>
-      <div class='w-full flex flex-col gap-4'>
-        <p class='text-xl'>
-          Seasoned full stack developer with over 8 years of expertise crafting
-          sophisticated web applications and bringing innovative tech products
-          from concept to deployment. - My background in both tech and fitness
-          helps me create solutions for people like me, busy professionals who
-          want efficient tools that actually work.
-        </p>
-        <div class='w-full flex flex-col gap-2'>
-          {
-            projects.map((post, index) => (
-              <ProjectCard
-                title={post.data.title}
-                description={post.data.description}
-                link={post.data.link}
-                offset={index + 1}
-              />
-            ))
-          }
-        </div>
-      </div>
-    </section>
+    <PageSection title='About Me'>
+      <p class='text-xl'>
+        Seasoned full stack developer with over 8 years of expertise crafting
+        sophisticated web applications and bringing innovative tech products
+        from concept to deployment. - My background in both tech and fitness
+        helps me create solutions for people like me, busy professionals who
+        want efficient tools that actually work.
+      </p>
+      <img src='/images/dylan.jpeg' class='rounded-md w-52' />
+    </PageSection>
     <hr class='border-neutral-200' />
-    <section
-      class='container mx-auto px-4 md:px-0 py-24 flex flex-col md:flex-row gap-8 overflow-visible'>
-      <div class='mt-1 w-full md:max-w-1/3'>
-        <SectionHeader client:load title='Experience' />
-      </div>
-      <div class='w-full'>
-        <ul class='font-medium flex flex-col gap-8'>
-          {
-            work.map((item, index) => (
-              <ExperienceCard
-                client:load
-                title={item.data.title}
-                company={item.data.company}
-                date={item.data.date}
-                delay={index}
-              />
-            ))
-          }
-        </ul>
-      </div>
-    </section>
+    <PageSection title='Projects'>
+      {
+        projects.map((post, index) => (
+          <ProjectCard
+            title={post.data.title}
+            description={post.data.description}
+            link={post.data.link}
+            offset={index + 1}
+          />
+        ))
+      }
+    </PageSection>
     <hr class='border-neutral-200' />
-    <section
-      class='container mx-auto px-4 md:px-0 py-24 flex flex-col gap-10 overflow-visible'>
-      <!-- Skills -->
-      <div class='mt-1 w-full'>
-        <SectionHeader client:load title='Skills' />
-      </div>
-      <div class='w-full'>
-        <ul class='text-lg md:text-xl font-medium flex flex-col gap-8'>
-          {
-            skills.map((item, index) => (
-              <SkillsCard client:load title={item} delay={index} />
-            ))
-          }
-        </ul>
-      </div>
-    </section>
-  </main>
-  <!-- <div class='w-full flex items-center p-6'>
-    <div
-      class='w-full max-w-6xl mx-auto backdrop-blur-[90px] bg-white/10 rounded-3xl p-4 flex flex-col items-center gap-6 text-white'>
-      <div class='flex flex-col gap-1 w-full'>
-        <div
-          class='relative w-7 h-7 rounded-full border border-black/10 overflow-hidden'>
-          <picture>
-            <source srcset='/profile.webp' type='image/webp' />
-            <source srcset='/profile.jpg' type='image/jpeg' />
-            <img
-              src='/profile.jpg'
-              alt='Dylan Britz'
-              class='w-full h-full object-cover'
-              loading='eager'
-              decoding='async'
-              width='128'
-              height='128'
-            />
-          </picture>
-        </div>
-
-        <div class='flex items-center gap-2'>
-          <h1 class='text-xl font-bold'>Dylan Britz</h1>
-          <div class='w-3 h-3 text-blue-500'>
-            <svg viewBox='0 0 24 24' fill='currentColor'>
-              <path
-                d='M21.174 9.639C20.821 9.27 20.455 8.889 20.318 8.555C20.19 8.248 20.183 7.74 20.175 7.248C20.161 6.333 20.146 5.296 19.425 4.575C18.704 3.854 17.667 3.839 16.752 3.825C16.26 3.817 15.752 3.81 15.445 3.683C15.112 3.545 14.73 3.179 14.361 2.826C13.714 2.204 12.979 1.5 12 1.5C11.021 1.5 10.287 2.204 9.639 2.826C9.27 3.179 8.889 3.545 8.555 3.683C8.25 3.81 7.74 3.817 7.248 3.825C6.333 3.839 5.296 3.854 4.575 4.575C3.854 5.296 3.844 6.333 3.825 7.248C3.817 7.74 3.81 8.248 3.683 8.555C3.545 8.888 3.179 9.27 2.826 9.639C2.204 10.286 1.5 11.021 1.5 12C1.5 12.979 2.204 13.713 2.826 14.361C3.179 14.73 3.545 15.111 3.683 15.445C3.81 15.752 3.817 16.26 3.825 16.752C3.839 17.667 3.854 18.704 4.575 19.425C5.296 20.146 6.333 20.161 7.248 20.175C7.74 20.183 8.248 20.19 8.555 20.317C8.888 20.455 9.27 20.821 9.639 21.174C10.286 21.796 11.021 22.5 12 22.5C12.979 22.5 13.713 21.796 14.361 21.174C14.73 20.821 15.111 20.455 15.445 20.317C15.752 20.19 16.26 20.183 16.752 20.175C17.667 20.161 18.704 20.146 19.425 19.425C20.146 18.704 20.161 17.667 20.175 16.752C20.183 16.26 20.19 15.752 20.317 15.445C20.455 15.112 20.821 14.73 21.174 14.361C21.796 13.714 22.5 12.979 22.5 12C22.5 11.021 21.796 10.287 21.174 9.639Z M16.281 10.281L11.031 15.531C10.89 15.671 10.699 15.751 10.5 15.751C10.301 15.751 10.11 15.671 9.969 15.531L7.719 13.281C7.426 12.988 7.426 12.512 7.719 12.219C8.012 11.926 8.488 11.926 8.781 12.219L10.5 13.94L15.219 9.219C15.512 8.926 15.988 8.926 16.281 9.219C16.574 9.512 16.574 9.988 16.281 10.281Z'
-              ></path>
-            </svg>
-          </div>
-        </div>
-
-        <p class='text-left text-base max-w-xl'>
-          Full stack developer with 8+ years of experience specializing in
-          modern web applications and e-commerce solutions. Expert in
-          TypeScript, Vue.js, and Node.js, with a proven track record of
-          delivering innovative solutions for financial institutions and digital
-          agencies across Europe and South Africa.
-        </p>
-      </div>
-
-      <div class='w-full grid grid-cols-2 gap-2'>
+    <PageSection title='Experience'>
+      <ul class='flex flex-col gap-8'>
         {
-          projects.map((post) => (
-            <ProjectCard
-              title={post.data.title}
-              description={post.data.description}
-              link={post.data.link}
+          work.map((item, index) => (
+            <ExperienceCard
+              client:load
+              title={item.data.title}
+              company={item.data.company}
+              date={item.data.date}
+              delay={index}
             />
           ))
         }
-      </div>
-    </div>
-  </div> -->
+      </ul>
+    </PageSection>
+    <hr class='border-neutral-200' />
+    <PageSection title='Skills'>
+      <ul class='flex flex-col gap-8'>
+        {
+          skills.map((item, index) => (
+            <SkillsCard client:load title={item} delay={index} />
+          ))
+        }
+      </ul>
+    </PageSection>
+  </main>
 </Layout>
