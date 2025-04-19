@@ -9,19 +9,18 @@ interface Props {
   robots?: string;
 }
 const props = Astro.props;
-import { date } from 'astro:schema';
 import Head from '../components/Head.astro';
 import '../styles/global.css';
 
 const links = [
   {
     title: 'X Profile',
-    link: '#',
+    link: 'https://x.com/britzdm',
     type: 'x',
   },
   {
-    title: 'X Profile',
-    link: '#',
+    title: 'LinkedIn Profile',
+    link: 'https://www.linkedin.com/in/britzdm/',
     type: 'linkedin',
   },
 ];
