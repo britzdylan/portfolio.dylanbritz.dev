@@ -28,7 +28,15 @@ const skills = [
         helps me create solutions for people like me, busy professionals who
         want efficient tools that actually work.
       </p>
-      <img src='/images/dylan.jpeg' class='rounded-md w-52' />
+      <picture>
+        <source srcset='/opt/images/dylan.webp' type='image/webp' />
+        <source srcset='/opt/images/dylan.jpeg' type='image/jpeg' />
+        <img
+          class='rounded-md w-52'
+          src='/opt/images/dylan.jpeg'
+          alt='Photo of Dylan Britz'
+        />
+      </picture>
     </PageSection>
     <hr class='border-neutral-200' />
     <PageSection title='Projects'>

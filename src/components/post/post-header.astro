@@ -11,22 +11,32 @@ const { title, description, author, date, imageId } = Astro.props;
         {description}
       </p>
       <div class='flex items-center gap-2'>
-        <img
-          src={`/profile.jpg`}
-          alt={`${author} avatar`}
-          class='w-4 h-4 rounded-full'
-          width='32px'
-          height='32px'
-        />
+        <picture>
+          <source srcset='/opt/images/profile.webp' type='image/webp' />
+          <source srcset='/opt/images/profile.jpeg' type='image/jpeg' />
+          <img
+            class='w-4 h-4 rounded-full'
+            width='32px'
+            height='32px'
+            src='/opt/images/profile.jpeg'
+            alt='Photo of Dylan Britz'
+          />
+        </picture>
+
         <p class='text-sm'>{author}</p>
         <span class='text-sm text-neutral-500'>•</span>
         <time class='text-sm text-neutral-500'>{date.toDateString()}</time>
       </div>
-      <img
-        src={`/images/${imageId}.png`}
-        alt={title}
-        class='w-full aspect-[720/360] object-cover rounded-lg shadow-lg'
-      />
+
+      <picture>
+        <source srcset=`/opt/images/${imageId}.webp` type='image/webp' />
+        <source srcset=`/opt/images/${imageId}.jpeg` type='image/jpeg' />
+        <img
+          class='w-full aspect-[720/360] object-cover rounded-lg shadow-lg'
+          src=`/opt/images/${imageId}.jpeg`
+          alt='Photo of Dylan Britz'
+        />
+      </picture>
     </div>
   </div>
 </header>

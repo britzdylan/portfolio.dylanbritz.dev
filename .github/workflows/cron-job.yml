@@ -1,0 +1,47 @@
+name: Weekly WebP Converter
+
+on:
+  schedule:
+    # Runs at 00:00 every Sunday
+    # The syntax is: minute hour day(month) month day(week)
+    - cron: '0 0 * * 0'
+
+  # Optional: Allow manual triggering of the workflow
+  workflow_dispatch:
+
+jobs:
+  run-webp-converter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          # Add any npm dependencies your script might need
+          # For example: npm install sharp
+          npm ci || npm install
+
+      - name: Run WebP converter script
+        run: |
+          # Run the script
+          node ./src/utils/webpConverter.js
+
+      - name: Check for changes and commit if needed
+        run: |
+          # Optional: Commit any changes the script might have made
+          if [[ -n $(git status --porcelain) ]]; then
+            git config --global user.name 'GitHub Actions Bot'
+            git config --global user.email 'actions@github.com'
+            git add .
+            git commit -m "Weekly WebP conversion [automated]"
+            git push
+          else
+            echo "No changes to commit"
+          fi

@@ -1,0 +1,141 @@
+---
+title: 'How to Run Scheduled Cron Jobs in GitHub Workflows for Free'
+author: 'Dylan Brtiz'
+date: 2025-04-20
+tags: ['github', 'workflows', 'devops', 'web-development']
+description: 'Discover how to effectively automate tasks using scheduled cron jobs in GitHub Actions for free, streamlining your workflow and improving efficiency.'
+---
+
+Ever wanted to automate repetitive tasks without paying for a dedicated server? GitHub Actions offers a powerful (and free!) solution for running scheduled tasks also known as cron jobs. Whether you need to sync data, generate reports, or even run a web scraper on schedule, this guide has you covered!
+
+## What Are GitHub Actions Scheduled Workflows?
+
+GitHub Actions lets you automate tasks based on various triggers, including time-based schedules using cron syntax. The best part? It's completely free for public repositories, with generous free minute allocations for private repos too.
+
+## Setting Up Your First Scheduled Workflow
+
+### 1. Create or Choose Your Repository
+
+Remember that public repositories have unlimited free minutes, while private repos get around 2000 minutes/month on free plans.
+
+### 2. Add a Workflow File
+
+Create a new file at `.github/workflows/cron-job.yml` in your repository.
+
+### 3. Define Your Schedule Using Cron Syntax
+
+Here's a simple example that runs every day at midnight (UTC):
+
+```yaml
+name: Daily Cron Job
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Every day at midnight UTC
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run script
+        run: echo "Scheduled job ran at $(date -u)"
+```
+
+### 4. Understanding Cron Syntax
+
+Cron expressions use five fields representing:
+
+- Minute (0-59)
+- Hour (0-23)
+- Day of Month (1-31)
+- Month (1-12)
+- Day of Week (0-6, where Sunday = 0)
+
+Here are some common patterns:
+
+| Cron Expression | What It Does                |
+| --------------- | --------------------------- |
+| `0 0 * * *`     | Every day at midnight UTC   |
+| `*/5 * * * *`   | Every five minutes          |
+| `0 13 * * 1`    | Every Monday at 1:00 PM UTC |
+
+Pro tip: Use [crontab.guru](https://crontab.guru) to test your cron expressions!
+
+## Best Practices for GitHub Actions Cron Jobs
+
+### Mind the Time Zone
+
+All GitHub Actions schedules run in UTC. Make sure to adjust your schedule accordingly if you need tasks to run at specific local times.
+
+### Schedule Strategically
+
+- The minimum interval allowed is every 5 minutes (`*/5 * * * *`)
+- Avoid scheduling exactly on the hour (`0 * * * *`) to prevent delays due to high demand
+- You can set multiple schedules in one workflow to create complex timing patterns
+
+### Choose the Right Environment
+
+By default, jobs run on Ubuntu, but you can specify `runs-on: windows-latest` or `macos-latest` if your tasks need a specific operating system.
+
+## Real-World Example: Scheduled Web Scraper
+
+Want to collect data from a website daily? Here's how to set up a Python web scraper to run every morning:
+
+```yaml
+name: Scheduled Web Scraper
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # Every day at 6am UTC
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run scraper
+        run: python scraper.py
+```
+
+This will run your scraper automatically at 6 AM UTC every day.
+
+## Why Choose GitHub Actions Over Alternatives?
+
+| Feature     | GitHub Actions            | Traditional Cron          | Cloud Schedulers             |
+| ----------- | ------------------------- | ------------------------- | ---------------------------- |
+| Setup       | Simple YAML in repo       | Requires server access    | Cloud configuration          |
+| Cost        | Free for public repos     | Free (but needs a server) | Usually requires payment     |
+| Maintenance | Managed by GitHub         | Your responsibility       | Minimal but requires account |
+| Best for    | Code projects, automation | Local tasks               | Production systems           |
+
+## Tips
+
+1. **Test your workflows** manually before scheduling them to catch any issues
+2. **Use GitHub Secrets** for storing API keys or sensitive information
+3. **Add conditions** to make your workflows smarter using the `if:` syntax
+4. **Monitor your usage** if you're using private repositories to avoid exceeding free minutes
+
+GitHub Actions scheduled workflows give you a free, flexible way to automate recurring tasks without managing servers or paying for third-party schedulers. Whether you're running maintenance scripts, syncing data, or creating automated reports, these cloud-based cron jobs integrate seamlessly with your existing GitHub workflow.
+
+## Have you set up any cool automated workflows with GitHub Actions? What tasks are you planning to automate?
+
+---
+
+Source:
+
+- https://theanshuman.dev/articles/free-cron-jobs-with-github-actions-31d6
+- https://docs.github.com/actions/learn-github-actions/events-that-trigger-workflows
+- https://jasonet.co/posts/scheduled-actions/
+- https://www.tinybird.co/docs/get-data-in/data-operations/scheduling-with-github-actions-and-cron
+- https://earthly.dev/blog/cronjobs-for-github-actions/,https://www.youtube.com/watch?v=kh7piyS2XeE
+- https://dev.to/anshuman_bhardwaj/free-cron-jobs-with-github-actions-31d6
+- https://github.com/remarkablemark/github-actions-workflows/blob/master/.github/workflows/cron.yml
+- https://www.firecrawl.dev/blog/automated-web-scraping-free-2025,https://docs.github.com/articles/getting-started-with-github-actions
