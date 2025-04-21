@@ -1,0 +1,141 @@
+---
+title: 'Explore the 5 Layers of Modern App Infrastructure'
+author: 'Dylan Britz'
+date: 2025-04-21
+tags: ['software', 'infrastructure', 'web-development']
+description: 'Discover how modern applications work by exploring the five essential layers of app infrastructure, from UI to hosting.'
+---
+
+Ever wondered how modern applications actually work under the hood? Apps like Instagram, Spotify, or even the banking app on your phone aren't just single chunks of code—they're sophisticated systems with multiple layers working together.
+
+Let's break down the five essential layers that make up today's application infrastructure in a way that's easy to understand but still technically valuable.
+
+## 1. User Interface (UI) Layer: What Users See and Touch
+
+The UI layer is like the storefront of your application—it's what users directly interact with.
+
+> User Interface are generally pixels on a screen a GUI (Graphical User Interface), however it could also be a CLI(command line), API. Voice etc.
+
+**What it does:**
+- Displays information in a visually appealing way
+- Captures user inputs (clicks, swipes, form submissions)
+- Provides feedback to user actions
+
+**Popular technologies:**
+- React, Angular, and Vue.js for web interfaces
+- Flutter and React Native for mobile apps
+- Tailwind CSS for styling
+
+
+## 2. API Layer: The Communication Bridge
+
+Think of the API layer as the waiter in a restaurant—it takes requests from the front (UI), delivers them to the kitchen (backend logic), and brings back what was requested.
+
+> Not all applications use APIs (Application Programming Interfaces). Monolithic applications, also known as monolithic architectures, are a type of software design where all components of an application are built together and run in a single executable or as one interconnected unit.
+
+
+**What it does:**
+- Creates standardized ways for different parts of your app to communicate
+- Shields the frontend from backend complexity
+- Enables third-party integrations
+
+**Popular technologies:**
+- RESTful APIs (the traditional approach)
+- GraphQL (more flexible, gaining popularity)
+- gRPC (high-performance, used in microservices)
+- API gateways like Kong or AWS API Gateway
+
+**Pro tips for junior devs:**
+- Always implement proper authentication (OAuth 2.0, JWT)
+- Document your APIs using Swagger/OpenAPI
+- Design with versioning in mind—your API will change over time!
+
+## 3. Logic Layer: The Brains of the Operation
+
+This layer is where the actual "thinking" happens in your application—like calculating prices, validating data, or determining if a user can access a resource.
+
+**What it does:**
+- Implements business rules and workflows
+- Processes data from the UI
+- Makes decisions based on user inputs and application state
+
+**Popular technologies:**
+- Backend frameworks like Django (Python), Spring (Java), or AdonisJs (Node.js)
+- Serverless functions (AWS Lambda, Azure Functions)
+- Microservices architectures for complex applications
+
+**Pro tips for junior devs:**
+- Start with a simpler monolithic approach until you understand your domain well
+- Use design patterns like Repository or Factory to keep your code organized
+- Write unit tests for your business logic—it's the heart of your application!
+
+## 4. Database Layer: Where Data Lives
+
+The database layer is your application's memory—storing everything from user information to application content.
+
+**What it does:**
+- Stores and retrieves data
+- Ensures data integrity and consistency
+- Provides efficient data access patterns
+
+**Popular technologies:**
+- Relational databases: PostgreSQL, MySQL (great for structured data with relationships)
+- NoSQL databases: MongoDB, DynamoDB (flexible for rapidly changing data structures)
+- Caching systems: Redis, Memcached (for performance optimization)
+
+**Pro tips for junior devs:**
+- Choose your database based on your data structure needs, not just popularity
+- Learn about ORMs (Object-Relational Mappers) to interact with databases more easily
+- Don't underestimate the importance of database indexing for performance
+
+## 5. Hosting Layer: Where Everything Runs
+
+This final layer provides the actual computing resources that run your application—think of it as the building that houses your business.
+
+**What it does:**
+- Provides computing power, storage, and networking
+- Ensures your application is available 24/7
+- Scales resources up or down based on demand
+
+**Popular technologies:**
+- Cloud platforms: AWS, Azure, Google Cloud
+- Containerization: Docker, Kubernetes
+- Infrastructure as Code: Terraform, CloudFormation
+
+**Pro tips for junior devs:**
+- Learn the basics of cloud services—they're not going anywhere!
+- Start with managed services that handle the complexity for you
+- Explore Infrastructure as Code early—it turns complex server setup into repeatable code
+
+## How These Layers Work Together
+
+Let's see how these layers interact in a real-world example:
+
+1. A user taps "Add to Cart" in an e-commerce app (UI Layer)
+2. The app sends an API request to add the product to the cart (API Layer)
+3. The backend validates the product availability and calculates pricing (Logic Layer)
+4. The updated cart information is saved to the database (Database Layer)
+5. All of this happens on servers running in the cloud (Hosting Layer)
+
+## Getting Started
+
+If you're just starting out, here's my advice:
+
+1. **Don't try to learn everything at once.** Pick one technology from each layer to focus on.
+2. **Build a simple project that uses all five layers.** Even a basic todo app can teach you a lot.
+3. **Understand the separation of concerns.** Keep each layer focused on its responsibility.
+4. **Embrace modularity.** Build small, testable components that do one thing well.
+5. **Learn about automation.** CI/CD pipelines and Infrastructure as Code are game-changers.
+
+The beauty of understanding these layers is that while technologies may change rapidly, the fundamental architecture remains fairly consistent. Master these concepts, and you'll have a solid foundation for your development career!
+
+Sources:
+
+- https://www.indeed.com/career-advice/career-development/what-are-the-layers-in-software-architecture,
+- https://www.montecarlodata.com/blog-how-to-build-a-5-layer-modern-data-stack/,
+- https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures,
+- https://www.zartis.com/modern-application-infrastructure/,
+- https://cloud.google.com/terms/services,
+- https://www.gorilla.guide/5-pillars-infrastructure-management/,
+- https://www.solarwinds.com/resources/it-glossary/application-infrastructure,
+- https://www.techtarget.com/searchcloudcomputing/definition/cloud-computing

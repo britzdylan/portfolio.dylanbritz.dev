@@ -13,12 +13,12 @@ const { title, description, author, date, imageId } = Astro.props;
       <div class='flex items-center gap-2'>
         <picture>
           <source srcset='/opt/images/profile.webp' type='image/webp' />
-          <source srcset='/opt/images/profile.jpeg' type='image/jpeg' />
+          <source srcset='/opt/images/profile.jpg' type='image/jpg' />
           <img
             class='w-4 h-4 rounded-full'
             width='32px'
             height='32px'
-            src='/opt/images/profile.jpeg'
+            src='/opt/images/profile.jpg'
             alt='Photo of Dylan Britz'
           />
         </picture>
@@ -30,10 +30,10 @@ const { title, description, author, date, imageId } = Astro.props;
 
       <picture>
         <source srcset=`/opt/images/${imageId}.webp` type='image/webp' />
-        <source srcset=`/opt/images/${imageId}.jpeg` type='image/jpeg' />
+        <source srcset=`/opt/images/${imageId}.png` type='image/png' />
         <img
           class='w-full aspect-[720/360] object-cover rounded-lg shadow-lg'
-          src=`/opt/images/${imageId}.jpeg`
+          src=`/opt/images/${imageId}.png`
           alt='Photo of Dylan Britz'
         />
       </picture>
