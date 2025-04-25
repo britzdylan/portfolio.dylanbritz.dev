@@ -1,0 +1,228 @@
+---
+title: 'Master Pre-rendering Dynamic Routes in Nuxt 3 with Nitro'
+author: 'Dylan Britz'
+date: 2025-04-25
+tags: ['nuxt3', 'workflows', 'web-development']
+description: ' Unlock faster page loads and improved security by mastering pre-rendering in Nuxt 3 with this expert guide.'
+---
+
+Looking to supercharge your Nuxt 3 application with lightning-fast page loads? Pre-rendering (or Static Site Generation) might be exactly what you need. In this guide, I'll dive deep into how you can leverage Nuxt 3 and its Nitro server engine to pre-render dynamic routes like a pro.
+
+## Why Pre-rendering Matters
+
+Pre-rendering transforms your dynamic Nuxt app into static HTML files at build time, which means:
+
+- ⚡ Ultra-fast page loads (CDN-ready!)
+- 🔒 Improved security with fewer server dependencies
+- 💰 Lower hosting costs (static hosting is cheap!)
+
+## Understanding Dynamic Routes in Nuxt 3
+
+Before we jump into pre-rendering strategies, let's clarify what dynamic routes are. In Nuxt 3, dynamic pages are created in the `/pages` directory using bracket syntax:
+
+```
+/pages/blog/[slug].vue  // Creates dynamic routes like /blog/my-post
+```
+
+These routes typically depend on dynamic data (like content from a CMS or database), making them particularly challenging to pre-render.
+
+## 5 Powerful Ways to Pre-render Dynamic Routes
+
+### 1. Explicit Route Declaration
+
+The most straightforward approach is manually listing your dynamic routes in the `nuxt.config.ts` file:
+
+```javascript
+export default defineNuxtConfig({
+  nitro: {
+    prerender: {
+      routes: ["/blog/first-post", "/blog/second-post"],
+      ignore: ["/admin"]
+    },
+  },
+})
+```
+
+**Best for:** Small sites with a limited number of known routes.
+
+### 2. Dynamic Route Discovery with Lifecycle Hooks
+
+When your routes come from an external data source, automate the process with Nuxt's lifecycle hooks:
+
+```javascript
+export default defineNuxtConfig({
+  hooks: {
+    async 'prerender:routes'(ctx) {
+      const posts = await fetch("https://my-api.com/posts").then(res => res.json());
+      
+      // Add each post's URL to the pre-rendering queue
+      for (const post of posts) {
+        ctx.routes.add(`/blog/${post.slug}`);
+      }
+    }
+  }
+})
+```
+
+Alternatively, you can use the `nitro:config` hook:
+
+```javascript
+export default defineNuxtConfig({
+  hooks: {
+    async 'nitro:config'(nitroConfig) {
+      if (nitroConfig.dev) return;
+      
+      const routes = await fetchDynamicRoutes();
+      nitroConfig.prerender = nitroConfig.prerender || {};
+      nitroConfig.prerender.routes = [
+        ...(nitroConfig.prerender.routes || []), 
+        ...routes
+      ];
+    }
+  }
+});
+```
+
+**Best for:** Sites with content from APIs, CMS platforms, or databases.
+
+### 3. Automatic Crawling with `crawlLinks`
+
+Let Nitro discover and pre-render your routes automatically by enabling the crawl feature:
+
+```javascript
+export default defineNuxtConfig({
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: ["/"],
+      ignore: ["/api", "/admin"]
+    },
+  },
+})
+```
+
+The crawler starts from your specified routes (like the homepage) and follows all internal links it finds in the HTML.
+
+**Best for:** Sites with good internal linking and discoverable content.
+
+**Pro tip:** The crawler won't find routes that are loaded lazily or via JavaScript, so combine this with methods 1 or 2 for comprehensive coverage!
+
+### 4. Route Rules for Granular Control
+
+Nuxt 3 offers powerful route rules that let you control pre-rendering at a pattern level:
+
+```javascript
+export default defineNuxtConfig({
+  routeRules: {
+    '/blog/**': { prerender: true },
+    '/products/**': { prerender: true },
+    '/admin/**': { prerender: false }
+  }
+});
+```
+
+You can even specify pre-rendering directly in your page components:
+
+```vue
+<script setup>
+defineRouteRules({ prerender: true });
+</script>
+```
+
+**Best for:** Applications with mixed rendering needs (some static, some server-rendered).
+
+### 5. Programmatic Hints with `prerenderRoutes`
+
+Use the `prerenderRoutes` utility within your components or scripts to add routes during the build process:
+
+```javascript
+<script setup>
+// This will add the route to pre-rendering at build time
+prerenderRoutes(['/sitemap.xml', '/products/special-offer']);
+</script>
+```
+
+**Best for:** Adding routes that might be missed by other methods, especially from deeply nested components.
+
+## Best Practices for Pre-rendering Success
+
+1. **Combine strategies** - Use crawling for discoverable content and explicit routes for everything else.
+
+2. **Verify your build output** - After running `nuxi generate`, check your `.output/public` directory to ensure all expected HTML files were generated.
+
+3. **Handle data fetching correctly** - Make sure your `useFetch` or `useAsyncData` calls work both during pre-rendering and on client navigation.
+
+4. **Don't forget about pagination** - Explicitly pre-render paginated routes that the crawler might miss.
+
+5. **Monitor build times** - Pre-rendering large numbers of pages can significantly increase build times. For very large sites, consider partial pre-rendering of important pages.
+
+## Common Pitfalls to Avoid
+
+- **Crawler limitations**: The crawler only finds links in the initial HTML. Routes loaded via AJAX or displayed conditionally might be missed.
+
+- **API data staleness**: Pre-rendered routes reflect data at build time. For frequently changing data, consider server-side rendering instead.
+
+- **Environment variables**: Make sure all required API keys are available during the build process.
+
+- **Incorrect route patterns**: Be careful with your glob patterns in route rules to avoid missing important pages.
+
+## Real-world Example: Blog with Categories and Tags
+
+Here's how you might handle pre-rendering for a blog with multiple dynamic route parameters:
+
+```javascript
+// nuxt.config.ts
+export default defineNuxtConfig({
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: ["/"]
+    },
+  },
+  hooks: {
+    async 'prerender:routes'(ctx) {
+      // Fetch all blog posts
+      const posts = await fetch("https://my-cms.com/posts").then(res => res.json());
+      
+      // Pre-render each individual post
+      for (const post of posts) {
+        ctx.routes.add(`/blog/${post.slug}`);
+      }
+      
+      // Pre-render category pages
+      const categories = [...new Set(posts.map(post => post.category))];
+      for (const category of categories) {
+        ctx.routes.add(`/category/${category}`);
+      }
+      
+      // Pre-render tag pages (with pagination)
+      const tags = [...new Set(posts.flatMap(post => post.tags))];
+      for (const tag of tags) {
+        ctx.routes.add(`/tag/${tag}`);
+        
+        // Handle pagination for tags with many posts
+        const tagPostCount = posts.filter(p => p.tags.includes(tag)).length;
+        const pages = Math.ceil(tagPostCount / 10);
+        
+        for (let i = 2; i <= pages; i++) {
+          ctx.routes.add(`/tag/${tag}/page/${i}`);
+        }
+      }
+    }
+  }
+});
+```
+
+Pre-rendering dynamic routes in Nuxt 3 with Nitro gives you the best of both worlds: the development experience of a dynamic application with the performance benefits of static HTML.
+
+Sources:
+
+- https://nuxt.com/docs/getting-started/prerendering,
+- https://nuxt.com/docs/api/utils/prerender-routes,
+- https://www.docs4.dev/posts/nuxt-3-hybrid-rendering-pre-render-dynamic-routes-ssg,
+- https://github.com/codepie-io/nuxt3-dynamic-routes,
+- https://nuxt.com/docs/guide/concepts/rendering,
+- https://github.com/nuxt/nuxt/issues/30926,
+- https://github.com/nuxt/nuxt/discussions/22006,
+- https://masteringnuxt.com/blog/dynamic-pages-in-nuxt-3,
+- https://www.youtube.com/watch?v=dtpKrqvwUTU,
