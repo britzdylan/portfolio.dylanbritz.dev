@@ -42,7 +42,7 @@ const { Content } = await render(post);
       },
       headline: post.data.title,
       description: post.data.description,
-      image: `https://dylanbritz.dev/opt/images/${post.data.image}.png`,
+      image: `https://dylanbritz.dev/opt/images/${post.id}.png`,
       author: {
         '@type': 'Person',
         name: 'Dylan Britz',
@@ -51,10 +51,6 @@ const { Content } = await render(post);
       publisher: {
         '@type': 'Person',
         name: 'Dylan Britz',
-        logo: {
-          '@type': 'ImageObject',
-          url: 'https://dylanbritz.dev/android-chrome-512x512.png',
-        },
       },
       datePublished: String(post.data.date),
       dateModified: String(post.data.date),
