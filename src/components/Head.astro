@@ -1,5 +1,6 @@
 ---
 import { Seo } from 'astro-seo-meta';
+import { Schema } from 'astro-seo-schema';
 interface Props {
   title?: string;
   description?: string;
@@ -74,7 +75,17 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       }}
     />
   </slot>
-  <!-- <SomeOtherTags />
-
-<Favicon /> -->
+  <Schema
+    item={{
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'Dylan Britz',
+      alternateName: 'Dylan Martin Britz',
+      knowsAbout: ['Compilers', 'Computer Science'],
+      jobTitle: 'Software Engineer',
+      nationality: 'South African',
+      url: 'http://dylanbritz.dev',
+      sameAs: ['https://x.com/britzdm', 'https://www.linkedin.com/in/britzdm/'],
+    }}
+  />
 </head>

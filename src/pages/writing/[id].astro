@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import PostHeader from '../../components/post/post-header.astro';
 import BackButton from '../../components/ui/back-button.vue';
 import { sortByDate } from '../../utils/sortByDate.js';
+import { Schema } from 'astro-seo-schema';
 // 1. Generate a new path for every collection entry
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -31,6 +32,34 @@ const { Content } = await render(post);
 ---
 
 <Layout title={post.data.title} description={post.data.description ?? ''}>
+  <Schema
+    item={{
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': `https://dylanbritz.dev/writing/${post.id}`,
+      },
+      headline: post.data.title,
+      description: post.data.description,
+      image: `https://dylanbritz.dev/opt/images/${post.data.image}.png`,
+      author: {
+        '@type': 'Person',
+        name: 'Dylan Britz',
+        url: 'https://dylanbritz.dev',
+      },
+      publisher: {
+        '@type': 'Person',
+        name: 'Dylan Britz',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://dylanbritz.dev/android-chrome-512x512.png',
+        },
+      },
+      datePublished: String(post.data.date),
+      dateModified: String(post.data.date),
+    }}
+  />
   <article class='bg-neutral-50 w-full flex flex-col'>
     <PostHeader
       title={post.data.title}
